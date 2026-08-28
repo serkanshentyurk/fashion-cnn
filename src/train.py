@@ -82,7 +82,8 @@ def main():
     
     ece = compute_ece(confidences, correctness, n_bins=10)
     print(f"Validation ECE: {ece:.4f}")
-    plot_reliability_diagram(confidences, correctness, n_bins=10)
+    fig,ax = plot_reliability_diagram(confidences, correctness, n_bins=10)
+    fig.savefig("reports/figures/reliability_diagram.png")
 
     val_acc   = evaluate(trained_model, val_loader)
     print(f"train accuracy: {train_acc:.4f}")
@@ -92,6 +93,13 @@ def main():
     preds, labels = get_predictions(trained_model, val_loader)
     print(confusion_matrix(labels, preds))
     print(classification_report(labels, preds))
+    
+    # FINAL — sealed test set, single touch, no fitting
+    test_acc = evaluate(trained_model, test_loader)
+    test_conf, test_correct = get_confidences_and_correctness(trained_model, test_loader)
+    test_ece = compute_ece(test_conf, test_correct, n_bins=10)
+    print(f"\nFINAL TEST accuracy: {test_acc:.4f}")
+    print(f"FINAL TEST ECE:      {test_ece:.4f}")
     
 if __name__ == "__main__":
     main()
