@@ -82,7 +82,7 @@ def main():
     
     ece = compute_ece(confidences, correctness, n_bins=10)
     print(f"Validation ECE: {ece:.4f}")
-    fig,ax = plot_reliability_diagram(confidences, correctness, n_bins=10)
+    fig, ax = plot_reliability_diagram(confidences, correctness, n_bins=10)
     fig.savefig("reports/figures/reliability_diagram.png")
 
     val_acc   = evaluate(trained_model, val_loader)

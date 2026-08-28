@@ -6,3 +6,4 @@ __pycache__/
 data/
 *.pth
 v1.ipynb
+.pytest_cache/
