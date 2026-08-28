@@ -4,6 +4,7 @@ from src.model import SmallCNN
 from src.data import get_data_loaders
 from src.evaluate import evaluate
 from src.utils import get_device
+from src.calibrate import *
 from typing import Optional
 
 from sklearn.metrics import confusion_matrix, classification_report
@@ -74,6 +75,15 @@ def main():
     trained_model = train(model, train_loader, epochs=5, lr=1e-3)
     
     train_acc = evaluate(trained_model, train_loader)
+    
+    confidences, correctness = get_confidences_and_correctness(
+        trained_model,
+        val_loader)
+    
+    ece = compute_ece(confidences, correctness, n_bins=10)
+    print(f"Validation ECE: {ece:.4f}")
+    plot_reliability_diagram(confidences, correctness, n_bins=10)
+
     val_acc   = evaluate(trained_model, val_loader)
     print(f"train accuracy: {train_acc:.4f}")
     print(f"val accuracy:   {val_acc:.4f}")

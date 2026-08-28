@@ -7,7 +7,7 @@ class SmallCNN(nn.Module):
     Architecture: 2 conv layers with max pooling, followed by a fully connected layer.
     """
     
-    def __init__(self):
+    def __init__(self, use_dropout: bool = False):
         """
         Initialize the SmallCNN.
         The architecture consists of:
@@ -16,8 +16,9 @@ class SmallCNN(nn.Module):
         - Flatten layer to convert 2D feature maps to 1D feature vectors
         - Fully connected layer with 10 output classes (for classification)
         """
-        
         super().__init__()
+        self.dropout = nn.Dropout(p=0.25) if use_dropout else nn.Identity()
+
         self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 16, kernel_size=3, padding=1),
 			nn.ReLU(),
@@ -43,5 +44,6 @@ class SmallCNN(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.flatten(x)
+        x = self.dropout(x)
         x = self.fc(x)
         return x
